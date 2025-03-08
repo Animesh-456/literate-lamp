@@ -1,0 +1,23 @@
+name: "CI/CD Pipeline practise"
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to Azure VM via SSH
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.AZURE_HOST }}
+        username: ${{ secrets.AZURE_USER }}
+        key: ${{ secrets.AZURE_SSH_KEY }}
+        script: |
+          cd /home/azureuser/sites/test-cicd/ # Change to your directory
+          test -d literate-lamp && cd literate-lamp && git pull origin master || git clone https://github.com/Animesh-456/literate-lamp.git
